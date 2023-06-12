@@ -75,10 +75,8 @@ class TextToSpeechConverter:
     def flow_one(self, content, target_language):
         summary500 = self.internal_summarizer(content)
         long_summary = self.summarise_gpt(summary500, 200, 'english')
-        headline = self.summarise_gpt(summary500, 35, 'english')
         translate_content = self.translate_text(long_summary, target_language)
-        translate_headline = self.translate_text(headline, target_language)
-        audio = self.synthesize_speech(translate_headline, target_language)
+        audio = self.synthesize_speech(translate_content, target_language)
         return audio
 
     def convert_to_speech(self, content_file_path, target_language):
