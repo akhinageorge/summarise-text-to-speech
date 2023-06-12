@@ -64,7 +64,7 @@ class TextToSpeechConverter:
         summary = response.choices[0].message.content
         return summary
 
-    def flow_one(self, content, target_language):
+    def summarise_tts(self, content, target_language):
         long_summary = self.summarise_gpt(content, 200, 'english')
         translate_content = self.translate_text(long_summary, target_language)
         audio = self.synthesize_speech(translate_content, target_language)
@@ -74,7 +74,7 @@ class TextToSpeechConverter:
         with open(content_file_path, 'r') as file:
             content = file.read()
 
-        audio = self.flow_one(content, target_language)
+        audio = self.summarise_tts(content, target_language)
         return audio
 
 converter = TextToSpeechConverter()
