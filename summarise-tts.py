@@ -19,14 +19,6 @@ class TextToSpeechConverter:
         self.tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
         self.model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-large-cnn")
 
-    def internal_summarizer(self, text):
-        inputs = self.tokenizer(text, max_length=1024, truncation=True, padding="longest", return_tensors="pt")
-
-        # Generate Summary
-        summary_ids = self.model.generate(inputs["input_ids"], max_length=500, min_length=500)
-        summary = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-        return summary
-
     def translate_text(self, text, target_language):
         translate_client = translate.Client()
         translation = translate_client.translate(text, target_language, source_language='en')
@@ -73,8 +65,7 @@ class TextToSpeechConverter:
         return summary
 
     def flow_one(self, content, target_language):
-        summary500 = self.internal_summarizer(content)
-        long_summary = self.summarise_gpt(summary500, 200, 'english')
+        long_summary = self.summarise_gpt(content, 200, 'english')
         translate_content = self.translate_text(long_summary, target_language)
         audio = self.synthesize_speech(translate_content, target_language)
         return audio
